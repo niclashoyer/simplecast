@@ -33,7 +33,7 @@ def render(weather=[]):
 
     output = template.render(weather=weather)
 
-    f = open("pub/index.html", "w")
+    f = open("dist/index.html", "w")
     f.write(output)
     f.close()
 

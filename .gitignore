@@ -1,2 +1,4 @@
-/pub/*
-!/pub/.gitkeep
+/dist/*
+!/dist/.gitkeep
+/node_modules/
+/.parcel-cache/
