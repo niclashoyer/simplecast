@@ -9,6 +9,11 @@
   <h1 class="text-3xl font-bold underline">
     Hello world!
   </h1>
+  <ul>
+  {% for row in weather %}
+  <li>{{ row.Index[1].strftime('%Y-%m-%d %H:%M') }} {{ row.wind_speed }} m/s</li>
+  {% endfor %}
+  </ul>
   <script src="./index.js"></script>
 </body>
 </html>

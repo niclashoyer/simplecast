@@ -25,13 +25,11 @@ def render(weather=[]):
     weather.interpolate(inplace=True)
 
     print(weather.head())
-    for row in weather.itertuples():
-        print(row)
     file_loader = FileSystemLoader("templates")
     env = Environment(loader=file_loader)
     template = env.get_template("index.html")
 
-    output = template.render(weather=weather)
+    output = template.render(weather=weather.itertuples())
 
     f = open("dist/index.html", "w")
     f.write(output)
