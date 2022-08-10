@@ -1,3 +1,6 @@
+@import "../node_modules/weather-icons/css/weather-icons.css";
+@import "../node_modules/weather-icons/css/weather-icons-wind.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

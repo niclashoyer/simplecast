@@ -9,7 +9,7 @@ poetry install
 ## Build assets
 
 ```
-npx parcel build templates/index.js
+npm run build
 ```
 
 ## Generating forecasts

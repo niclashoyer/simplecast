@@ -1,0 +1,50 @@
+{% macro weather_icon(num) -%}
+{% if num == 0 %}
+<i class="wi wi-day-sunny"></i>
+{% elif num == 1 %}
+<i class="wi wi-day-cloudy"></i>
+{% elif num == 2 %}
+<i class="wi wi-cloud"></i>
+{% elif num == 3 %}
+<i class="wi wi-cloudy"></i>
+{% endif %}
+{%- endmacro %}
+<!doctype ht ml>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./index.css" rel="stylesheet">
+</head>
+<body>
+{% macro weather_row() %}
+  <div class="container mx-auto flex">
+    <div class="flex-none w-14">
+      <div class="h-5"></div>
+      <div class="h-7"></div>
+      <div class="h-10"></div>
+      <div class="h-7">m/s</div>
+      <div class="h-7">bft</div>
+      <div class="h-14"></div>
+    </div>
+{% endmacro %}
+    {{ weather_row() }}
+    {% for row in weather %}
+    {# new row for every day #}
+    {% if loop.index > 1 and row.Index[1].strftime('%-H') == "0" %}
+      </div>
+      {{ weather_row() }}
+    {% endif %}
+    <div class="flex-none w-14 text-center">
+      <div class="h-5">{{ row.Index[1].strftime('%a') }}</div>
+      <div class="h-7">{{ row.Index[1].strftime('%H:%M') }}</div>
+      <div class="h-10 text-3xl">{{ weather_icon(row.weather_significant) }}</div>
+      <div class="h-7">{{ row.wind_speed }}</div>
+      <div class="h-7">{{ row.wind_speed|ms_to_bft }}</div>
+      <div class="h-14 text-3xl"><i class="wi wi-wind from-{{ row.wind_direction|round|int }}-deg"></i></div>
+    </div>
+    {% endfor %}
+  </div>
+  <script src="./index.js"></script>
+</body>
+</html>

@@ -1,0 +1,654 @@
+{
+    "small": {
+        "temperature_air_mean_200": {
+            "origin": "K",
+            "si": "K"
+        },
+        "temperature_dew_point_mean_200": {
+            "origin": "K",
+            "si": "K"
+        },
+        "temperature_air_max_200": {
+            "origin": "K",
+            "si": "K"
+        },
+        "temperature_air_min_200": {
+            "origin": "K",
+            "si": "K"
+        },
+        "wind_direction": {
+            "origin": "deg",
+            "si": "deg"
+        },
+        "wind_speed": {
+            "origin": "m / s",
+            "si": "m / s"
+        },
+        "wind_gust_max_last_1h": {
+            "origin": "m / s",
+            "si": "m / s"
+        },
+        "wind_gust_max_last_3h": {
+            "origin": "m / s",
+            "si": "m / s"
+        },
+        "wind_gust_max_last_12h": {
+            "origin": "m / s",
+            "si": "m / s"
+        },
+        "precipitation_height_significant_weather_last_1h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "precipitation_height_significant_weather_last_3h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "water_equivalent_snow_depth_new_last_1h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "water_equivalent_snow_depth_new_last_3h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "weather_significant": {
+            "origin": "sign [0..95]",
+            "si": "sign [0..95]"
+        },
+        "weather_last_6h": {
+            "origin": "-",
+            "si": "-"
+        },
+        "cloud_cover_total": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "cloud_cover_effective": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "cloud_cover_below_500_ft": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "cloud_cover_below_1000_ft": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "cloud_cover_between_2_to_7_km": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "cloud_cover_above_7_km": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "pressure_air_site_reduced": {
+            "origin": "Pa",
+            "si": "Pa"
+        },
+        "temperature_air_mean_005": {
+            "origin": "K",
+            "si": "K"
+        },
+        "radiation_global": {
+            "origin": "% [0..80]",
+            "si": "% [0..80]"
+        },
+        "visibility_range": {
+            "origin": "m",
+            "si": "m"
+        },
+        "sunshine_duration": {
+            "origin": "s",
+            "si": "s"
+        },
+        "probability_wind_gust_ge_25_kn_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_wind_gust_ge_40_kn_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_wind_gust_ge_55_kn_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_fog_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_fog_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_fog_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_0_0_mm_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_0_2_mm_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_0_2_mm_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_0_2_mm_last_24h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_1_0_mm_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_5_0_mm_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_5_0_mm_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_5_0_mm_last_24h": {
+            "origin": "pct",
+            "si": "pct"
+        }
+    },
+    "large": {
+        "temperature_air_mean_200": {
+            "origin": "K",
+            "si": "K"
+        },
+        "temperature_dew_point_mean_200": {
+            "origin": "K",
+            "si": "K"
+        },
+        "temperature_air_max_200": {
+            "origin": "K",
+            "si": "K"
+        },
+        "temperature_air_min_200": {
+            "origin": "K",
+            "si": "K"
+        },
+        "wind_direction": {
+            "origin": "deg",
+            "si": "deg"
+        },
+        "wind_speed": {
+            "origin": "m / s",
+            "si": "m / s"
+        },
+        "wind_gust_max_last_1h": {
+            "origin": "m / s",
+            "si": "m / s"
+        },
+        "wind_gust_max_last_3h": {
+            "origin": "m / s",
+            "si": "m / s"
+        },
+        "wind_gust_max_last_12h": {
+            "origin": "m / s",
+            "si": "m / s"
+        },
+        "precipitation_height_significant_weather_last_1h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "precipitation_height_last_1h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "precipitation_height_significant_weather_last_3h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "precipitation_height_last_3h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "water_equivalent_snow_depth_new_last_1h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "water_equivalent_snow_depth_new_last_3h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "weather_significant": {
+            "origin": "sign [0..95]",
+            "si": "sign [0..95]"
+        },
+        "weather_last_6h": {
+            "origin": "-",
+            "si": "-"
+        },
+        "cloud_cover_total": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "cloud_cover_effective": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "cloud_cover_below_500_ft": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "cloud_cover_below_1000_ft": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "cloud_cover_between_2_to_7_km": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "cloud_cover_above_7_km": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "pressure_air_site_reduced": {
+            "origin": "Pa",
+            "si": "Pa"
+        },
+        "temperature_air_mean_005": {
+            "origin": "K",
+            "si": "K"
+        },
+        "radiation_global_last_3h": {
+            "origin": "kJ / m ** 2",
+            "si": "J / m ** 2"
+        },
+        "radiation_global": {
+            "origin": "% [0..80]",
+            "si": "% [0..80]"
+        },
+        "radiation_sky_long_wave_last_3h": {
+            "origin": "kJ / m ** 2",
+            "si": "J / m ** 2"
+        },
+        "visibility_range": {
+            "origin": "m",
+            "si": "m"
+        },
+        "sunshine_duration": {
+            "origin": "s",
+            "si": "s"
+        },
+        "probability_wind_gust_ge_25_kn_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_wind_gust_ge_40_kn_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_wind_gust_ge_55_kn_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_fog_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_fog_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_fog_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_0_0_mm_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_0_2_mm_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_0_2_mm_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_0_2_mm_last_24h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_1_0_mm_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_5_0_mm_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_5_0_mm_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_5_0_mm_last_24h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "temperature_air_min_005_last_12h": {
+            "origin": "K",
+            "si": "K"
+        },
+        "temperature_air_mean_200_last_24h": {
+            "origin": "K",
+            "si": "K"
+        },
+        "precipitation_duration": {
+            "origin": "s",
+            "si": "s"
+        },
+        "probability_drizzle_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_stratiform_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_convective_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_thunder_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_liquid_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_solid_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_freezing_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_visibility_below_1000_m": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "error_absolute_temperature_air_mean_200": {
+            "origin": "K",
+            "si": "K"
+        },
+        "error_absolute_wind_speed": {
+            "origin": "m / s",
+            "si": "m / s"
+        },
+        "error_absolute_wind_direction": {
+            "origin": "deg",
+            "si": "deg"
+        },
+        "error_absolute_temperature_dew_point_mean_200": {
+            "origin": "K",
+            "si": "K"
+        },
+        "precipitation_height_last_6h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "precipitation_height_significant_weather_last_6h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "probability_precipitation_height_gt_0_0_mm_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_0_1_mm_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_0_2_mm_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_0_3_mm_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_0_5_mm_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_0_7_mm_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_1_0_mm_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_2_0_mm_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "sunshine_duration_yesterday": {
+            "origin": "s",
+            "si": "s"
+        },
+        "sunshine_duration_relative_last_24h": {
+            "origin": "-",
+            "si": "-"
+        },
+        "probability_sunshine_duration_relative_gt_0_pct_last_24h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_sunshine_duration_relative_gt_30_pct_last_24h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_sunshine_duration_relative_gt_60_pct_last_24h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_radiation_global_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "evapotranspiration_potential_last_24h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "probability_precipitation_height_gt_3_0_mm_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_5_0_mm_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_10_0_mm_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_15_0_mm_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_25_0_mm_last_1h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_stratiform_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_convective_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_thunder_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_liquid_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_freezing_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_solid_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_drizzle_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_fog_last_24h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_wind_gust_ge_25_kn_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_wind_gust_ge_40_kn_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_wind_gust_ge_55_kn_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_stratiform_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_convective_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_thunder_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_liquid_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_freezing_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_solid_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_drizzle_last_12h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_1_0_mm_last_6h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "precipitation_height_last_12h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "precipitation_height_significant_weather_last_12h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "weather_significant_last_3h": {
+            "origin": "sign [0..95]",
+            "si": "sign [0..95]"
+        },
+        "precipitation_height_liquid_significant_weather_last_1h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "probability_precipitation_height_gt_0_0_mm_last_24h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_height_gt_1_0_mm_last_24h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "precipitation_height_last_24h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "precipitation_height_significant_weather_last_24h": {
+            "origin": "kg / m ** 2",
+            "si": "kg / m ** 2"
+        },
+        "cloud_cover_below_7_km": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "probability_precipitation_last_24h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "cloud_base_convective": {
+            "origin": "m",
+            "si": "m"
+        },
+        "probability_thunder_last_24h": {
+            "origin": "pct",
+            "si": "pct"
+        },
+        "error_absolute_pressure_air_site": {
+            "origin": "Pa",
+            "si": "Pa"
+        },
+        "sunshine_duration_last_3h": {
+            "origin": "s",
+            "si": "s"
+        },
+        "weather_significant_optional_last_1h": {
+            "origin": "sign [0..95]",
+            "si": "sign [0..95]"
+        },
+        "weather_significant_optional_last_3h": {
+            "origin": "sign [0..95]",
+            "si": "sign [0..95]"
+        },
+        "weather_significant_optional_last_6h": {
+            "origin": "sign [0..95]",
+            "si": "sign [0..95]"
+        },
+        "weather_significant_optional_last_12h": {
+            "origin": "sign [0..95]",
+            "si": "sign [0..95]"
+        },
+        "weather_significant_optional_last_24h": {
+            "origin": "sign [0..95]",
+            "si": "sign [0..95]"
+        }
+    }
+}
