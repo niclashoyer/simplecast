@@ -22,6 +22,7 @@ def load_data(station_ids):
 def render(weather=[]):
     weather = weather.df.sort_values(by=["station_id", "date"]).pivot_table(
         index=["station_id", "date"], columns="parameter", values="value")
+    weather.interpolate(inplace=True)
 
     print(weather.head())
     for row in weather.itertuples():
