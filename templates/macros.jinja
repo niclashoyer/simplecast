@@ -124,3 +124,28 @@
 {{ steps[index] }}
 {%- endmacro -%}
 
+
+{# map temperature to tailwind color #}
+{%- macro temp_color(ms) -%}
+{%- set max = 30 -%}
+{%- set steps = [
+  '',
+  'bg-blue-200',
+  'bg-blue-300',
+  'bg-green-300',
+  'bg-lime-300',
+  'bg-yellow-300',
+  'bg-amber-300',
+  'bg-amber-400',
+  'bg-orange-400',
+  'bg-red-400',
+  'bg-red-500',
+] -%}
+{%- set step = (max / steps|count) -%}
+{%- set index = (ms/step)|round(0, 'floor')|int -%}
+{%- if index >= steps|count -%}
+  {%- set index = (steps|count - 1) -%}
+{%- endif -%}
+{{ steps[index] }}
+{%- endmacro -%}
+
