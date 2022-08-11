@@ -749,7 +749,7 @@ bufr = ["pdbufr[eccodes] (>=0.9.0,<0.10.0)"]
 
 [package.source]
 type = "git"
-url = "git@github.com:niclashoyer/wetterdienst.git"
+url = "https://github.com/niclashoyer/wetterdienst.git"
 reference = "mosmix_iterparse"
 resolved_reference = "2936b0bdf3edcde395f575d7070440219633a0c0"
 
@@ -768,7 +768,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "38c5d4965a3ca90a33b459bdcaaf5bc323addf6716fe746cf4bcc68f9fd21662"
+content-hash = "fbbbfbf951fdb3d090863bf82b520f2d37ef55342ca816df182c55c15184fa88"
 
 [metadata.files]
 aenum = [
