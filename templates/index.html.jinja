@@ -1,100 +1,4 @@
-{% macro weather_icon(num) -%}
-{% if num == 0 %}
-<i class="wi wi-day-sunny"></i>
-{% elif num == 1 %}
-<i class="wi wi-day-cloudy"></i>
-{% elif num == 2 %}
-<i class="wi wi-cloud"></i>
-{% elif num == 3 %}
-<i class="wi wi-cloudy"></i>
-{% elif num == 45 %}
-<i class="wi wi-fog"></i>
-{% elif num == 49 %}
-<i class="wi wi-fog"></i>
-{% elif num == 61 %}
-<i class="wi wi-day-rain-mix"></i>
-{% elif num == 63 %}
-<i class="wi wi-rain-mix"></i>
-{% elif num == 65 %}
-<i class="wi wi-hail"></i>
-{% elif num == 51 %}
-<i class="wi wi-day-rain-mix"></i>
-{% elif num == 53 %}
-<i class="wi wi-rain-mix"></i>
-{% elif num == 55 %}
-<i class="wi wi-hail"></i>
-{% elif num == 68 %}
-<i class="wi wi-sleet"></i>
-{% elif num == 69 %}
-<i class="wi wi-sleet"></i>
-{% elif num == 71 %}
-<i class="wi wi-day-snow"></i>
-{% elif num == 73 %}
-<i class="wi wi-day-snow"></i>
-{% elif num == 75 %}
-<i class="wi wi-day-snow"></i>
-{% elif num == 80 %}
-<i class="wi wi-day-showers"></i>
-{% elif num == 81 %}
-<i class="wi wi-day-showers"></i>
-{% elif num == 82 %}
-<i class="wi wi-day-shower"></i>
-{% elif num == 83 %}
-<i class="wi wi-day-snow"></i>
-{% elif num == 84 %}
-<i class="wi wi-day-snow"></i>
-{% elif num == 85 %}
-<i class="wi wi-day-sleet"></i>
-{% elif num == 86 %}
-<i class="wi wi-day-sleet"></i>
-{% elif num == 66 %}
-<i class="wi wi-snowflake-cold"></i>
-{% elif num == 67 %}
-<i class="wi wi-snowflake-cold"></i>
-{% elif num == 56 %}
-<i class="wi wi-snowflake-cold"></i>
-{% elif num == 57 %}
-<i class="wi wi-snowflake-cold"></i>
-{% elif num == 95 %}
-<i class="wi wi-thunderstorm"></i>
-{% endif %}
-{%- endmacro %}
-{%- macro wind_color(ms) -%}
-{%- set max = 25 -%}
-{%- set steps = [
-  'bg-sky-50',
-  'bg-sky-100',
-  'bg-sky-200',
-  'bg-sky-300',
-  'bg-sky-400',
-  'bg-sky-500',
-  'bg-cyan-500',
-  'bg-teal-500',
-  'bg-emerald-500',
-  'bg-green-500',
-  'bg-lime-500',
-  'bg-yellow-500',
-  'bg-amber-500',
-  'bg-orange-500',
-  'bg-red-500',
-  'bg-rose-500',
-  'bg-pink-500',
-  'bg-fuchsia-500',
-  'bg-purple-500',
-  'bg-violet-500',
-  'bg-indigo-500',
-  'bg-blue-500',
-  'bg-blue-600',
-  'bg-blue-700',
-  'bg-blue-800',
-] -%}
-{%- set step = (max / steps|count) -%}
-{%- set index = (ms/step)|round(0, 'floor')|int -%}
-{%- if index >= steps|count -%}
-  {%- set index = (steps|count - 1) -%}
-{%- endif -%}
-{{ steps[index] }}
-{%- endmacro -%}
+{% import 'macros.jinja' as macros %}
 <!doctype html>
 <html>
 <head>
@@ -105,16 +9,18 @@
 <body>
   <div class="container mx-auto">
     {%- macro weather_row(row) %}
-      <h2 class="text-2xl ml-14 mb-4 mt-8">{{ row.Index[1].strftime('%A, %d.%m.') }}</h2>
-      <div class="flex overflow-x-auto max-w-full text-center">
+      <h2 class="text-2xl ml-14 mb-4 mt-20">{{ row.Index[1].strftime('%A, %d.%m.') }}</h2>
+      <div class="flex text-center overflow-hidden">
         <div class="flex-none w-14">
           <div class="h-10"></div>
           <div class="h-10"></div>
           <div class="h-7">°C</div>
           <div class="h-7">bft</div>
           <div class="h-7"><i class="wi wi-strong-wind"></i></div>
-          <div class="h-14"></div>
+          <div class="h-10"></div>
+          <div class="h-7"><i class="wi wi-raindrop"></i></div>
         </div>
+        <div class="flex-none flex overflow-x-auto max-w-full">
     {%- endmacro %}
     {% for row in weather %}
       {% set hour = row.Index[1].strftime('%-H')|int %}
@@ -123,20 +29,23 @@
         {{ weather_row(row) }}
       {% endif %}
       {% if loop.index > 1 and hour == 0 %}
+        </div>
       </div>
         {{ weather_row(row) }}
       {% endif %}
-      {% if loop.index > 1 and hour >= 8 and hour <= 20 %}
+      {% if loop.index > 1 %}
         <div class="flex-none w-14 text-center">
           <div class="h-10">{{ row.Index[1].strftime('%H:%M') }}</div>
-          <div class="h-10 text-3xl">{{ weather_icon(row.weather_significant) }}</div>
-          <div class="h-7">{{ (row.temperature_air_mean_005 - 273.15)|round|int }}</div>
-          <div class="h-7 {{ wind_color(row.wind_speed) }}">{{ row.wind_speed|ms_to_bft }}</div>
-          <div class="h-7 {{ wind_color(row.wind_gust_max_last_1h) }}">{{ row.wind_gust_max_last_1h|ms_to_bft }}</div>
-          <div class="h-14 text-3xl"><i class="wi wi-wind from-{{ row.wind_direction|round|int }}-deg"></i></div>
+          <div class="h-10 text-3xl">{{ macros.weather_icon(row.weather_significant) }}</div>
+          <div class="h-7">{{ (row.temperature_air_mean_005|default(NaN) - 273.15)|round|int }}</div>
+          <div class="h-7 {{ macros.wind_color(row.wind_speed) }}">{{ row.wind_speed|ms_to_bft }}</div>
+          <div class="h-7 {{ macros.wind_color(row.wind_gust_max_last_1h) }}">{{ row.wind_gust_max_last_1h|ms_to_bft }}</div>
+          <div class="h-10 text-3xl"><i class="wi wi-wind from-{{ row.wind_direction|round|int }}-deg"></i></div>
+          <div class="h-7 {{ macros.rain_color(row.precipitation_height_significant_weather_last_1h) }}">{{ row.precipitation_height_significant_weather_last_1h }}</div> 
         </div>
       {% endif %}
     {% endfor %}
+      </div>
   </div>
   <div class="mt-20">
   Source: Deutscher Wetterdienst, <a href="https://www.dwd.de/DE/leistungen/met_verfahren_mosmix/met_verfahren_mosmix.html">MOSMIX</a>
