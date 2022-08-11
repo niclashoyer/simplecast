@@ -20,7 +20,7 @@
           <div class="h-10"></div>
           <div class="h-7"><i class="wi wi-raindrop"></i></div>
         </div>
-        <div class="flex-none flex overflow-x-auto max-w-full">
+        <div class="flex overflow-x-auto">
     {%- endmacro %}
     {% for row in weather %}
       {% set hour = row.Index[1].strftime('%-H')|int %}
