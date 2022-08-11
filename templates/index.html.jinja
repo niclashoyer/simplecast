@@ -59,7 +59,43 @@
 <i class="wi wi-thunderstorm"></i>
 {% endif %}
 {%- endmacro %}
-<!doctype ht ml>
+{%- macro wind_color(ms) -%}
+{%- set max = 25 -%}
+{%- set steps = [
+  'bg-sky-50',
+  'bg-sky-100',
+  'bg-sky-200',
+  'bg-sky-300',
+  'bg-sky-400',
+  'bg-sky-500',
+  'bg-cyan-500',
+  'bg-teal-500',
+  'bg-emerald-500',
+  'bg-green-500',
+  'bg-lime-500',
+  'bg-yellow-500',
+  'bg-amber-500',
+  'bg-orange-500',
+  'bg-red-500',
+  'bg-rose-500',
+  'bg-pink-500',
+  'bg-fuchsia-500',
+  'bg-purple-500',
+  'bg-violet-500',
+  'bg-indigo-500',
+  'bg-blue-500',
+  'bg-blue-600',
+  'bg-blue-700',
+  'bg-blue-800',
+] -%}
+{%- set step = (max / steps|count) -%}
+{%- set index = (ms/step)|round(0, 'floor')|int -%}
+{%- if index >= steps|count -%}
+  {%- set index = (steps|count - 1) -%}
+{%- endif -%}
+{{ steps[index] }}
+{%- endmacro -%}
+<!doctype html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -95,8 +131,8 @@
           <div class="h-10">{{ row.Index[1].strftime('%H:%M') }}</div>
           <div class="h-10 text-3xl">{{ weather_icon(row.weather_significant) }}</div>
           <div class="h-7">{{ (row.temperature_air_mean_005 - 273.15)|round|int }}</div>
-          <div class="h-7">{{ row.wind_speed|ms_to_bft }}</div>
-          <div class="h-7">{{ row.wind_gust_max_last_1h|ms_to_bft }}</div>
+          <div class="h-7 {{ wind_color(row.wind_speed) }}">{{ row.wind_speed|ms_to_bft }}</div>
+          <div class="h-7 {{ wind_color(row.wind_gust_max_last_1h) }}">{{ row.wind_gust_max_last_1h|ms_to_bft }}</div>
           <div class="h-14 text-3xl"><i class="wi wi-wind from-{{ row.wind_direction|round|int }}-deg"></i></div>
         </div>
       {% endif %}
