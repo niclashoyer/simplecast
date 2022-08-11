@@ -34,7 +34,6 @@
       </div>
         {{ weather_row(row) }}
       {% endif %}
-      {% if loop.index > 1 %}
         <div class="flex-none w-14 text-center">
           <div class="h-10">{{ row.Index[1].strftime('%H:%M') }}</div>
           <div class="h-10 text-3xl">{{ macros.weather_icon(row.weather_significant) }}</div>
@@ -44,7 +43,6 @@
           <div class="h-10 text-3xl"><i class="wi wi-wind from-{{ row.wind_direction|round|int }}-deg"></i></div>
           <div class="h-7 {{ macros.rain_color(row.precipitation_height_significant_weather_last_1h) }}">{{ row.precipitation_height_significant_weather_last_1h }}</div> 
         </div>
-      {% endif %}
     {% endfor %}
       </div>
   </div>
