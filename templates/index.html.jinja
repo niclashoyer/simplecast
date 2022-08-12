@@ -9,7 +9,7 @@
 <body>
   <div class="container mx-auto">
     {%- macro weather_row(ts, row) %}
-      <h2 class="text-2xl ml-14 mb-4 mt-20">{{ row.Index[1].strftime('%A, %d.%m.') }}</h2>
+      <h2 class="text-2xl ml-14 mb-4 mt-20">{{ ts.strftime('%A, %d.%m.') }}</h2>
       <div class="flex text-center overflow-hidden">
         <div class="flex-none w-14">
           <div class="h-10"></div>
