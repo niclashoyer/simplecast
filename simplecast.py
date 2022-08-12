@@ -7,7 +7,7 @@ from wetterdienst.util.cli import setup_logging
 import locale
 
 
-locale.setlocale(locale.LC_TIME, 'de_DE')
+locale.setlocale(locale.LC_TIME, 'de_DE.utf8')
 
 
 def print_stations():
