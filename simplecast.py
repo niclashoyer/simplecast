@@ -54,6 +54,7 @@ def ms_to_bft(ms):
 def weather_iter(weather):
     for row in weather.itertuples():
         ts = row.Index[1].astimezone("Europe/Berlin")
+        print(ts)
         yield (ts, row)
 
 
