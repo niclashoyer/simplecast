@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="container mx-auto">
-    {%- macro weather_row(row) %}
+    {%- macro weather_row(ts, row) %}
       <h2 class="text-2xl ml-14 mb-4 mt-20">{{ row.Index[1].strftime('%A, %d.%m.') }}</h2>
       <div class="flex text-center overflow-hidden">
         <div class="flex-none w-14">
@@ -22,20 +22,20 @@
         </div>
         <div class="flex overflow-x-auto">
     {%- endmacro %}
-    {% for row in weather %}
-      {%- set hour = row.Index[1].strftime('%-H')|int -%}
+    {% for ts, row in weather %}
+      {%- set hour = ts.strftime('%-H')|int -%}
       {%- set temp = (row.temperature_air_mean_005|default(NaN) - 273.15)|round|int -%}
       {# new row for every day #}
       {% if loop.index == 1 %}
-        {{ weather_row(row) }}
+        {{ weather_row(ts, row) }}
       {% endif %}
       {% if loop.index > 1 and hour == 0 %}
         </div>
       </div>
-        {{ weather_row(row) }}
+        {{ weather_row(ts, row) }}
       {% endif %}
         <div class="flex-none w-14 text-center">
-          <div class="h-10">{{ row.Index[1].strftime('%H:%M') }}</div>
+          <div class="h-10">{{ ts.strftime('%H:%M') }}</div>
           <div class="h-10 text-3xl">{{ macros.weather_icon(row.weather_significant) }}</div>
           <div class="h-7 {{ macros.temp_color(temp) }}">{{ temp }}</div>
           <div class="h-7 {{ macros.wind_color(row.wind_speed) }}">{{ row.wind_speed|ms_to_bft }}</div>

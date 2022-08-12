@@ -7,7 +7,7 @@ from wetterdienst.util.cli import setup_logging
 import locale
 
 
-locale.setlocale(locale.LC_TIME, '')
+locale.setlocale(locale.LC_TIME, 'de_DE')
 
 
 def print_stations():
@@ -51,6 +51,12 @@ def ms_to_bft(ms):
     return 12
 
 
+def weather_iter(weather):
+    for row in weather.itertuples():
+        ts = row.Index[1].astimezone("Europe/Berlin")
+        yield (ts, row)
+
+
 def render(weather=[]):
     weather = weather.df.sort_values(by=["station_id", "date"]).pivot_table(
         index=["station_id", "date"], columns="parameter", values="value")
@@ -62,7 +68,7 @@ def render(weather=[]):
     env.filters["ms_to_bft"] = ms_to_bft
     template = env.get_template("index.html.jinja")
 
-    output = template.render(weather=weather.itertuples())
+    output = template.render(weather=weather_iter(weather))
 
     f = open("dist/index.html", "w")
     f.write(output)
