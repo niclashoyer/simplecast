@@ -20,6 +20,6 @@ npm run build
 ## Generating forecasts
 
 ```bash
-poetry run ./simplecast.py // list all available stations
-poetry run ./simplecast.py 10384 // generate forecasts for "BERLIN-TEMPELHOF"
+poetry run ./simplecast.py # list all available stations
+poetry run ./simplecast.py 10384 # generate forecasts for "BERLIN-TEMPELHOF"
 ```
