@@ -23,3 +23,11 @@ npm run build
 poetry run ./simplecast.py # list all available stations
 poetry run ./simplecast.py 10384 # generate forecasts for "BERLIN-TEMPELHOF"
 ```
+
+The `dist` folder now contains the generated forecast page.
+
+To start a simple local webserver run
+
+```bash
+npm run dev
+```
