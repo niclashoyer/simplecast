@@ -5,6 +5,7 @@ from wetterdienst import Wetterdienst
 from wetterdienst.provider.dwd.mosmix import DwdMosmixType
 from wetterdienst.util.cli import setup_logging
 import locale
+import pytz
 
 
 locale.setlocale(locale.LC_TIME, 'de_DE.utf8')
@@ -13,7 +14,7 @@ locale.setlocale(locale.LC_TIME, 'de_DE.utf8')
 def print_stations():
     API = Wetterdienst(provider="dwd", network="mosmix")
     stations = API(parameter="small", mosmix_type=DwdMosmixType.SMALL)
-    print(stations.all().df.to_string())
+    print(stations.all().df)
 
 
 def load_data(station_ids):
@@ -52,16 +53,15 @@ def ms_to_bft(ms):
 
 
 def weather_iter(weather):
-    for row in weather.itertuples():
-        ts = row.Index[1].astimezone("Europe/Berlin")
-        print(ts)
+    for row in weather.iter_rows(named=True):
+        ts = row['date'].astimezone(pytz.timezone("Europe/Berlin"))
         yield (ts, row)
 
 
 def render(weather=[]):
-    weather = weather.df.sort_values(by=["station_id", "date"]).pivot_table(
+    weather = weather.df.sort(["station_id", "date"]).pivot(
         index=["station_id", "date"], columns="parameter", values="value")
-    weather.interpolate(inplace=True)
+    weather.interpolate()
 
     print(weather.head())
     file_loader = FileSystemLoader("templates")

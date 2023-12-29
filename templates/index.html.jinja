@@ -32,6 +32,8 @@
     {%- endmacro %}
     {% for ts, row in weather %}
       {%- set hour = ts.strftime('%-H')|int -%}
+      {%- set nan = 'nan' -%}
+      {%- set NaN = nan|float -%}
       {%- set temp = (row.temperature_air_mean_005|default(NaN) - 273.15)|round|int -%}
       {# new row for every day #}
       {% if loop.index == 1 %}
@@ -57,6 +59,5 @@
   <div class="mt-20">
   Source: Deutscher Wetterdienst, <a href="https://www.dwd.de/DE/leistungen/met_verfahren_mosmix/met_verfahren_mosmix.html">MOSMIX</a>
   </div>
-  <script src="./index.js"></script>
 </body>
 </html>

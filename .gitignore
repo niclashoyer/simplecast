@@ -2,3 +2,8 @@
 !/dist/.gitkeep
 /node_modules/
 /.parcel-cache/
+/static/index.css
+/.venv/
+
+# Ignore DevSpace cache and log folder
+.devspace/

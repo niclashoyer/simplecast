@@ -1,0 +1,19 @@
+FROM docker.io/bitnami/minideb:bookworm
+
+RUN install_packages \
+    build-essential \
+	python3-poetry \
+    python3-dev \
+    locales \
+	nodejs \
+	npm    
+
+RUN echo 'de_DE.UTF-8 UTF-8' >> /etc/locale.gen \
+    && locale-gen
+
+RUN poetry config virtualenvs.in-project true
+
+RUN mkdir /project
+WORKDIR /project
+
+VOLUME /project
