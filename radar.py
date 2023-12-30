@@ -70,7 +70,7 @@ def plot(ds: xr.Dataset, product_type: str):
     proj_target = proj_mercator
 
     # start a new figure
-    fig = plt.figure(figsize=(16, 16))
+    fig = plt.figure(figsize=(15, 16))
     ax = fig.add_subplot(111, aspect="equal")
 
     # plot Germany
@@ -100,6 +100,7 @@ def plot(ds: xr.Dataset, product_type: str):
     plt.title(f"{product_type} RADOLAN \n{ds.time.min().values}")
     ax.xaxis.set_visible(False)
     ax.yaxis.set_visible(False)
+    plt.tight_layout(pad=5.0)
 
     # set boundaries around Germany
     [[x1, x2], [y1, y2]] = wrl.georef.reproject([4.0, 16.0], [46.0, 56.0], src_crs=proj_wgs84, trg_crs=proj_target)
