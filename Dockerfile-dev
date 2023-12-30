@@ -7,6 +7,8 @@ RUN install_packages \
     locales \
 	nodejs \
 	npm \
+    libgdal32 \
+    libgdal-dev \
     fish
 
 RUN echo 'de_DE.UTF-8 UTF-8' >> /etc/locale.gen \

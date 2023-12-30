@@ -13,6 +13,9 @@ matplotlib = "^3.8.2"
 xarray = "^2023.12.0"
 wradlib = "^2.0.3"
 webp = "^0.3.0"
+rioxarray = "^0.15.0"
+pyproj = "^3.6.1"
+gdal = "3.6.2"
 
 [tool.poetry.dev-dependencies]
 
