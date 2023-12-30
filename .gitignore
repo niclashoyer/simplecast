@@ -4,6 +4,7 @@
 /.parcel-cache/
 /static/index.css
 /.venv/
+radar.webp
 
 # Ignore DevSpace cache and log folder
 .devspace/

@@ -6,7 +6,8 @@ RUN install_packages \
     python3-dev \
     locales \
 	nodejs \
-	npm    
+	npm \
+    fish
 
 RUN echo 'de_DE.UTF-8 UTF-8' >> /etc/locale.gen \
     && locale-gen
