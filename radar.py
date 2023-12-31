@@ -34,32 +34,37 @@ def plot(ds: xr.Dataset, product_type: str):
     # start a new figure
     fig = plt.figure(figsize=(15, 16))
     ax = fig.add_subplot(111, aspect="equal")
+    
 
     # plot Germany
     filename = "countries/ne_10m_admin_0_countries_lakes.shp"
     dataset, inLayer = wrl.io.open_vector(filename)
     fattr = "name = 'Germany'"
     inLayer.SetAttributeFilter(fattr)
-    
+
     patches, keys = wrl.georef.get_vector_coordinates(inLayer, trg_crs=proj_target, key="name")
     wrl.vis.add_patches(ax, patches, facecolor=mplcolors.to_rgba("gray", 0.25))
 
     # plot rain fall
     colors = [
         (0.0,  mplcolors.to_rgba("deepskyblue", 0.0)),
-        (0.05,  mplcolors.to_rgba("deepskyblue", 1.0)),
-        (0.2, mplcolors.to_rgba("dodgerblue", 1.0)),
-        (1.0, mplcolors.to_rgba("mediumpurple", 1.0)),
+        (0.05, mplcolors.to_rgba("deepskyblue", 1.0)),
+        (0.1,  mplcolors.to_rgba("dodgerblue", 1.0)),
+        (0.2,  mplcolors.to_rgba("mediumpurple", 1.0)),
+        (0.4,  mplcolors.to_rgba("darkviolet", 1.0)),
+        (0.65, mplcolors.to_rgba("coral", 1.0)),
+        (1.0,  mplcolors.to_rgba("red", 1.0)),
     ]
     cmap = mplcolors.LinearSegmentedColormap.from_list("rainfall", colors)
-    cmap.set_over("red", 1.0)
-    norm = mplcolors.PowerNorm(gamma=1.0, vmin=0.0, vmax=50.0)
+    cmap.set_over(mplcolors.to_rgba("orangered", 1.0))
+    norm = mplcolors.PowerNorm(gamma=1.0, vmin=0.0, vmax=50.0, clip=True)
     
-
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         da_projected = wrl.georef.reproject(ds[product_type], coords=dict(x="x", y="y"), src_crs=proj_radolan, trg_crs=proj_target)
-    da_projected.plot(ax=ax, cmap=cmap, norm=norm)
+    pc = da_projected.plot(ax=ax, cmap=cmap, norm=norm, add_colorbar=False)
+    cb = fig.colorbar(pc, extend='max')
+    cb.set_label("mm in 60 Minuten")
 
     # set title and limits
     ts_str = datetime.fromtimestamp(ds.time.min().values.item() / 10**9) \
@@ -74,6 +79,9 @@ def plot(ds: xr.Dataset, product_type: str):
     [[x1, x2], [y1, y2]] = wrl.georef.reproject([4.0, 16.0], [46.0, 56.0], src_crs=proj_wgs84, trg_crs=proj_target)
     ax.set_xlim(x1, x2)
     ax.set_ylim(y1, y2)
+
+    # add source
+    plt.figtext(0.99, 0.01, "Quelle: Deutscher Wetterdienst", horizontalalignment='right')
 
 
 def radolan_ry_example():
@@ -109,6 +117,7 @@ def radolan_ry_example():
         imgs.append(plt.gcf().canvas.renderer.buffer_rgba())
         plt.close()
 
+    log.info("Writing webp images")
     webp.mimwrite(file_path="radar.webp", arrs=imgs, fps=8.0)
 
 def main():
