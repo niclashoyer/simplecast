@@ -1,42 +1,3 @@
-# -*- coding: utf-8 -*-
-# Copyright (C) 2018-2023, earthobservations developers.
-# Distributed under the MIT License. See LICENSE for more info.
-"""
-=====
-About
-=====
-
-Example for DWD RADOLAN Composite RY using wetterdienst and wradlib.
-Hourly and gliding 24h sum of radar- and station-based measurements (German).
-
-See also:
-- https://docs.wradlib.org/en/stable/notebooks/fileio/radolan/radolan_showcase.html.
-
-This program will request daily (RADOLAN SF) data for 2020-09-04T12:00:00
-and plot the outcome with matplotlib.
-
-
-=======
-Details
-=======
-
-RADOLAN: Radar Online Adjustment
-Radar based quantitative precipitation estimation
-
-RADOLAN Composite RY
-Hourly and gliding 24h sum of radar- and station-based measurements (German)
-
-The routine procedure RADOLAN (Radar-Online-Calibration) provides area-wide,
-spatially and temporally high-resolution quantitative precipitation data in
-real-time for Germany.
-
-- https://www.dwd.de/EN/Home/_functions/aktuelles/2019/20190820_radolan.html
-- https://www.dwd.de/DE/leistungen/radolan/radolan_info/radolan_poster_201711_en_pdf.pdf?__blob=publicationFile&v=2
-- https://opendata.dwd.de/climate_environment/CDC/grids_germany/daily/radolan/
-- https://docs.wradlib.org/en/stable/notebooks/fileio/radolan/radolan_showcase.html#RADOLAN-Composite
-- Hourly: https://docs.wradlib.org/en/stable/notebooks/fileio/radolan/radolan_showcase.html#RADOLAN-RW-Product
-- Daily: https://docs.wradlib.org/en/stable/notebooks/fileio/radolan/radolan_showcase.html#RADOLAN-SF-Product
-"""  # noqa:D205,D400,E501
 import logging
 import os
 
@@ -44,6 +5,8 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mplcolors
 import xarray as xr
 from datetime import datetime, timedelta
+from pytz import timezone
+import warnings
 import webp
 
 from wetterdienst.provider.dwd.radar import (
@@ -52,13 +15,12 @@ from wetterdienst.provider.dwd.radar import (
     DwdRadarValues,
 )
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 log = logging.getLogger()
 
 
 def plot(ds: xr.Dataset, product_type: str):
     import wradlib as wrl
-    from pyproj.crs import CRS
 
     # set up projections
     proj_radolan = wrl.georef.create_osr("dwd-radolan-sphere")
@@ -93,11 +55,17 @@ def plot(ds: xr.Dataset, product_type: str):
     cmap.set_over("red", 1.0)
     norm = mplcolors.PowerNorm(gamma=1.0, vmin=0.0, vmax=50.0)
     
-    da_projected = wrl.georef.reproject(ds[product_type], coords=dict(x="x", y="y"), src_crs=proj_radolan, trg_crs=proj_target)
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        da_projected = wrl.georef.reproject(ds[product_type], coords=dict(x="x", y="y"), src_crs=proj_radolan, trg_crs=proj_target)
     da_projected.plot(ax=ax, cmap=cmap, norm=norm)
 
     # set title and limits
-    plt.title(f"{product_type} RADOLAN \n{ds.time.min().values}")
+    ts_str = datetime.fromtimestamp(ds.time.min().values.item() / 10**9) \
+        .astimezone(timezone("Europe/Berlin")) \
+        .strftime("%d.%m.%Y %H:%M")
+    plt.title(f"{product_type} RADOLAN \n{ts_str}")
     ax.xaxis.set_visible(False)
     ax.yaxis.set_visible(False)
     plt.tight_layout(pad=5.0)
@@ -112,7 +80,8 @@ def radolan_ry_example():
     """Retrieve RADOLAN ry reflectivity data by DWD."""
     log.info("Acquiring RADOLAN RY composite data")
     now = datetime.now()
-    start = now - timedelta(minutes=60)
+    #start = now - timedelta(minutes=30)
+    start = now - timedelta(hours=3)
     end = now
     radolan = DwdRadarValues(
         parameter=DwdRadarParameter.RY_REFLECTIVITY,
@@ -125,7 +94,9 @@ def radolan_ry_example():
     for item in radolan.query():
         # Decode data using wradlib.
         log.info("Parsing RADOLAN RY composite data for %s", item.timestamp)
-        ds = xr.open_dataset(item.data, engine="radolan")
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            ds = xr.open_dataset(item.data, engine="radolan")
 
         product_type = list(ds.data_vars.keys())[0]
 
@@ -136,8 +107,9 @@ def radolan_ry_example():
         
         plt.gcf().canvas.draw()
         imgs.append(plt.gcf().canvas.renderer.buffer_rgba())
+        plt.close()
 
-    webp.mimwrite(file_path="radar.webp", arrs=imgs, fps=2.0)
+    webp.mimwrite(file_path="radar.webp", arrs=imgs, fps=8.0)
 
 def main():
     """Run example."""
