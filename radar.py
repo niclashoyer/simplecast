@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from pytz import timezone
 import warnings
 import webp
+import glob
 
 from wetterdienst.provider.dwd.radar import (
     DwdRadarDate,
@@ -19,7 +20,7 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger()
 
 
-def plot(ds: xr.Dataset, product_type: str):
+def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
     import wradlib as wrl
 
     # set up projections
@@ -67,12 +68,14 @@ def plot(ds: xr.Dataset, product_type: str):
     cb.set_label("mm in 60 Minuten")
 
     # set title and limits
-    ts_str = datetime.fromtimestamp(ds.time.min().values.item() / 10**9) \
-        .astimezone(timezone("Europe/Berlin")) \
-        .strftime("%d.%m.%Y %H:%M")
+    ts_str = timestamp.strftime("%d.%m.%Y %H:%M")
     plt.title(f"{product_type} RADOLAN \n{ts_str}")
     ax.xaxis.set_visible(False)
     ax.yaxis.set_visible(False)
+    color_back = mplcolors.to_rgba("white", 1.0)
+    fig.set_facecolor(color_back)
+    ax.patch.set_facecolor(color_back)
+    ax.set_facecolor(color_back)
     plt.tight_layout(pad=5.0)
 
     # set boundaries around Germany
@@ -89,7 +92,7 @@ def radolan_ry_example():
     log.info("Acquiring RADOLAN RY composite data")
     now = datetime.now()
     #start = now - timedelta(minutes=30)
-    start = now - timedelta(hours=3)
+    start = now - timedelta(hours=12)
     end = now
     radolan = DwdRadarValues(
         parameter=DwdRadarParameter.RY_REFLECTIVITY,
@@ -97,28 +100,50 @@ def radolan_ry_example():
         end_date=end
     )
 
+    file_prefix = "radar"
+    file_quality = 70
     imgs = []
+    imgs_path = []
 
     for item in radolan.query():
-        # Decode data using wradlib.
-        log.info("Parsing RADOLAN RY composite data for %s", item.timestamp)
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            ds = xr.open_dataset(item.data, engine="radolan")
+        timestamp = item.timestamp.astimezone(timezone("Europe/Berlin"))
+        timestr = timestamp.strftime("%Y%m%d_%H%M")
+        file_path = "{}_{}.webp".format(file_prefix, timestr)
 
-        product_type = list(ds.data_vars.keys())[0]
+        if not os.path.exists(file_path):
+            # Decode data using wradlib.
+            log.info("Parsing RADOLAN RY composite data for %s", item.timestamp)
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                ds = xr.open_dataset(item.data, engine="radolan")
 
-        # Plot and display data.
-        plot(ds, product_type)
+            product_type = list(ds.data_vars.keys())[0]
 
-        ts = datetime.timestamp(item.timestamp)
-        
-        plt.gcf().canvas.draw()
-        imgs.append(plt.gcf().canvas.renderer.buffer_rgba())
+            # plotting the actual data
+            plot(ds, product_type, item.timestamp)
+
+            # write webp image
+            plt.gcf().canvas.draw()            
+            log.info("Writing webp file %s", file_path)
+            img = plt.gcf().canvas.renderer.buffer_rgba()
+            webp.imwrite(arr=img, file_path=file_path, quality=file_quality)
+        else:            
+            log.info("Skipping RADOLAN RY composite data for %s", item.timestamp)
+
+        imgs.append(webp.load_image(file_path))
+        imgs_path.append(file_path)
         plt.close()
+    
+    # write animation
+    file_anim = "{}.webp".format(file_prefix)
+    log.info("Writing webp animation to %s", file_anim)
+    webp.save_images(imgs, file_anim, fps=8.0, quality=file_quality)
 
-    log.info("Writing webp images")
-    webp.mimwrite(file_path="radar.webp", arrs=imgs, fps=8.0)
+    # remove old files
+    for f in glob.glob("{}_*.webp".format(file_prefix)):
+        if not f in imgs_path:
+            log.info("Removing old webp image %s", f)
+            os.remove(f)
 
 def main():
     """Run example."""

@@ -5,6 +5,7 @@
 /static/index.css
 /.venv/
 radar.webp
+radar_*.webp
 
 # Ignore DevSpace cache and log folder
 .devspace/
