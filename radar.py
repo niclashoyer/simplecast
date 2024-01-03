@@ -3,6 +3,7 @@ import os
 
 import matplotlib.pyplot as plt
 import matplotlib.colors as mplcolors
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 import xarray as xr
 from datetime import datetime, timedelta
 from pytz import timezone
@@ -23,6 +24,10 @@ log = logging.getLogger()
 def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
     import wradlib as wrl
 
+    # set up boundaries
+    bounds_lat = [46.0, 56.0]
+    bounds_lon = [4.0, 16.0]
+    
     # set up projections
     proj_radolan = wrl.georef.create_osr("dwd-radolan-sphere")
     proj_mercator = wrl.georef.epsg_to_osr(3857)
@@ -33,10 +38,9 @@ def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
     proj_target = proj_mercator
 
     # start a new figure
-    fig = plt.figure(figsize=(15, 16))
+    fig = plt.figure(figsize=(4.0, 5.0))
     ax = fig.add_subplot(111, aspect="equal")
     
-
     # plot Germany
     filename = "countries/ne_10m_admin_0_countries_lakes.shp"
     dataset, inLayer = wrl.io.open_vector(filename)
@@ -64,22 +68,28 @@ def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
         warnings.simplefilter("ignore")
         da_projected = wrl.georef.reproject(ds[product_type], coords=dict(x="x", y="y"), src_crs=proj_radolan, trg_crs=proj_target)
     pc = da_projected.plot(ax=ax, cmap=cmap, norm=norm, add_colorbar=False)
-    cb = fig.colorbar(pc, extend='max')
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+    cb = fig.colorbar(pc, extend='max', cax=cax)
     cb.set_label("mm in 60 Minuten")
 
     # set title and limits
-    ts_str = timestamp.strftime("%d.%m.%Y %H:%M")
-    plt.title(f"{product_type} RADOLAN \n{ts_str}")
     ax.xaxis.set_visible(False)
     ax.yaxis.set_visible(False)
     color_back = mplcolors.to_rgba("white", 1.0)
     fig.set_facecolor(color_back)
     ax.patch.set_facecolor(color_back)
     ax.set_facecolor(color_back)
-    plt.tight_layout(pad=5.0)
+    plt.tight_layout(pad=0.5)
+    ts_str = timestamp.strftime("%d.%m.%Y %H:%M")
+    ax.set_title(ts_str)
+    border_color = mplcolors.to_rgba("gray", 1.0)
+    ax.tick_params(color=border_color, labelcolor=border_color)
+    for spine in ax.spines.values():
+        spine.set_edgecolor(border_color)
 
-    # set boundaries around Germany
-    [[x1, x2], [y1, y2]] = wrl.georef.reproject([4.0, 16.0], [46.0, 56.0], src_crs=proj_wgs84, trg_crs=proj_target)
+    # set boundaries
+    [[x1, x2], [y1, y2]] = wrl.georef.reproject(bounds_lon, bounds_lat, src_crs=proj_wgs84, trg_crs=proj_target)
     ax.set_xlim(x1, x2)
     ax.set_ylim(y1, y2)
 
@@ -92,7 +102,7 @@ def radolan_ry_example():
     log.info("Acquiring RADOLAN RY composite data")
     now = datetime.now()
     #start = now - timedelta(minutes=30)
-    start = now - timedelta(hours=12)
+    start = now - timedelta(hours=3)
     end = now
     radolan = DwdRadarValues(
         parameter=DwdRadarParameter.RY_REFLECTIVITY,
