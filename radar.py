@@ -20,13 +20,36 @@ from wetterdienst.provider.dwd.radar import (
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger()
 
+def bounds_around(lat: float, lon: float, zoom: float, ratio: float):
+    ratio = ratio * 1.5 # leave room for figure padding
+    width = 360.0 / pow(2, zoom)
+    width2 = width / 2.0
+    lon1 = lon - width2
+    lon2 = lon + width2
+    height2 = width2 / ratio
+    lat1 = lat - height2
+    lat2 = lat + height2    
+    
+    return [[lat1, lat2], [lon1, lon2]]
 
 def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
     import wradlib as wrl
 
-    # set up boundaries
-    bounds_lat = [46.0, 56.0]
-    bounds_lon = [4.0, 16.0]
+    # start a new figure
+    scale = 2.0 # scale 2x for hidpi displays
+    fig_w = 4.0
+    fig_h = 5.4
+    dpi = 100.0 * scale
+    fig = plt.figure(figsize=(fig_w, fig_h), dpi=dpi)
+    ax = fig.add_subplot(111, aspect="equal")
+
+    dot = []
+
+    [bounds_lat, bounds_lon] = bounds_around(51.1638175, 10.4478313, 5.2, fig_w / fig_h) # Germany
+    #[bounds_lat, bounds_lon] = bounds_around(54.1853998, 9.8220089, 7.0, fig_w / fig_h) # Schleswig-Holstein
+
+    marker = None
+    marker = [54.1853998, 9.8220089]
     
     # set up projections
     proj_radolan = wrl.georef.create_osr("dwd-radolan-sphere")
@@ -36,10 +59,6 @@ def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
     proj_src = proj_radolan
     #proj_target = proj_wgs84
     proj_target = proj_mercator
-
-    # start a new figure
-    fig = plt.figure(figsize=(4.0, 5.0))
-    ax = fig.add_subplot(111, aspect="equal")
     
     # plot Germany
     filename = "countries/ne_10m_admin_0_countries_lakes.shp"
@@ -88,6 +107,11 @@ def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
     for spine in ax.spines.values():
         spine.set_edgecolor(border_color)
 
+    # add marker
+    if marker is not None:    
+        [[mx], [my]] = wrl.georef.reproject([marker[1]], [marker[0]], src_crs=proj_wgs84, trg_crs=proj_target)
+        ax.plot(mx, my, color=mplcolors.to_rgba("black", 0.5), marker='o')
+
     # set boundaries
     [[x1, x2], [y1, y2]] = wrl.georef.reproject(bounds_lon, bounds_lat, src_crs=proj_wgs84, trg_crs=proj_target)
     ax.set_xlim(x1, x2)
@@ -102,7 +126,7 @@ def radolan_ry_example():
     log.info("Acquiring RADOLAN RY composite data")
     now = datetime.now()
     #start = now - timedelta(minutes=30)
-    start = now - timedelta(hours=3)
+    start = now - timedelta(hours=4)
     end = now
     radolan = DwdRadarValues(
         parameter=DwdRadarParameter.RY_REFLECTIVITY,
@@ -110,8 +134,11 @@ def radolan_ry_example():
         end_date=end
     )
 
+    cache = True
     file_prefix = "radar"
-    file_quality = 70
+    file_quality = 80
+    lossless = False
+
     imgs = []
     imgs_path = []
 
@@ -120,7 +147,7 @@ def radolan_ry_example():
         timestr = timestamp.strftime("%Y%m%d_%H%M")
         file_path = "{}_{}.webp".format(file_prefix, timestr)
 
-        if not os.path.exists(file_path):
+        if not os.path.exists(file_path) or cache is False:
             # Decode data using wradlib.
             log.info("Parsing RADOLAN RY composite data for %s", item.timestamp)
             with warnings.catch_warnings():
@@ -130,13 +157,13 @@ def radolan_ry_example():
             product_type = list(ds.data_vars.keys())[0]
 
             # plotting the actual data
-            plot(ds, product_type, item.timestamp)
+            plot(ds, product_type, timestamp)
 
             # write webp image
             plt.gcf().canvas.draw()            
             log.info("Writing webp file %s", file_path)
             img = plt.gcf().canvas.renderer.buffer_rgba()
-            webp.imwrite(arr=img, file_path=file_path, quality=file_quality)
+            webp.imwrite(arr=img, file_path=file_path, quality=file_quality, lossless=lossless)
         else:            
             log.info("Skipping RADOLAN RY composite data for %s", item.timestamp)
 
@@ -147,7 +174,7 @@ def radolan_ry_example():
     # write animation
     file_anim = "{}.webp".format(file_prefix)
     log.info("Writing webp animation to %s", file_anim)
-    webp.save_images(imgs, file_anim, fps=8.0, quality=file_quality)
+    webp.save_images(imgs, file_anim, fps=8.0, quality=file_quality, lossless=lossless)
 
     # remove old files
     for f in glob.glob("{}_*.webp".format(file_prefix)):
