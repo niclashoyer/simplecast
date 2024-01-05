@@ -10,6 +10,7 @@ from pytz import timezone
 import warnings
 import webp
 import glob
+from ffmpeg import FFmpeg
 
 from wetterdienst.provider.dwd.radar import (
     DwdRadarDate,
@@ -45,8 +46,8 @@ def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
 
     dot = []
 
-    [bounds_lat, bounds_lon] = bounds_around(51.1638175, 10.4478313, 5.2, fig_w / fig_h) # Germany
-    #[bounds_lat, bounds_lon] = bounds_around(54.1853998, 9.8220089, 7.0, fig_w / fig_h) # Schleswig-Holstein
+    #[bounds_lat, bounds_lon] = bounds_around(51.1638175, 10.4478313, 5.2, fig_w / fig_h) # Germany
+    [bounds_lat, bounds_lon] = bounds_around(54.1853998, 9.8220089, 7.0, fig_w / fig_h) # Schleswig-Holstein
 
     marker = None
     marker = [54.1853998, 9.8220089]
@@ -57,7 +58,6 @@ def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
     proj_wgs84 = wrl.georef.epsg_to_osr(4326)
 
     proj_src = proj_radolan
-    #proj_target = proj_wgs84
     proj_target = proj_mercator
     
     # plot Germany
@@ -110,7 +110,7 @@ def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
     # add marker
     if marker is not None:    
         [[mx], [my]] = wrl.georef.reproject([marker[1]], [marker[0]], src_crs=proj_wgs84, trg_crs=proj_target)
-        ax.plot(mx, my, color=mplcolors.to_rgba("black", 0.5), marker='o')
+        ax.plot(mx, my, color=mplcolors.to_rgba("coral", 1.0), marker='o', markeredgecolor="black", markeredgewidth=1.0)
 
     # set boundaries
     [[x1, x2], [y1, y2]] = wrl.georef.reproject(bounds_lon, bounds_lat, src_crs=proj_wgs84, trg_crs=proj_target)
@@ -136,10 +136,9 @@ def radolan_ry_example():
 
     cache = True
     file_prefix = "radar"
-    file_quality = 80
+    file_quality = 50
     lossless = False
 
-    imgs = []
     imgs_path = []
 
     for item in radolan.query():
@@ -167,20 +166,33 @@ def radolan_ry_example():
         else:            
             log.info("Skipping RADOLAN RY composite data for %s", item.timestamp)
 
-        imgs.append(webp.load_image(file_path))
         imgs_path.append(file_path)
         plt.close()
     
-    # write animation
-    file_anim = "{}.webp".format(file_prefix)
-    log.info("Writing webp animation to %s", file_anim)
-    webp.save_images(imgs, file_anim, fps=8.0, quality=file_quality, lossless=lossless)
-
     # remove old files
     for f in glob.glob("{}_*.webp".format(file_prefix)):
         if not f in imgs_path:
             log.info("Removing old webp image %s", f)
             os.remove(f)
+
+    # run ffmpeg
+    file_vid = file_prefix + ".webm"
+    log.info("Rendering new video file %s", file_vid)
+    ffmpeg = (
+        FFmpeg()
+        .option("y")
+        .option("pattern_type", "glob")
+        .option("framerate", "8")
+        .input(file_prefix + "_*.webp")
+        .output(
+            file_vid, {
+                "c:v": "libvpx-vp9",
+                "b:v": "250K"
+            },
+        )
+    )
+    ffmpeg.execute()
+
 
 def main():
     """Run example."""

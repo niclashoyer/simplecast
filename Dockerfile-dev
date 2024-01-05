@@ -9,6 +9,7 @@ RUN install_packages \
 	npm \
     libgdal32 \
     libgdal-dev \
+    ffmpeg \
     fish
 
 RUN echo 'de_DE.UTF-8 UTF-8' >> /etc/locale.gen \

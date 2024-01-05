@@ -16,6 +16,7 @@ webp = "^0.3.0"
 rioxarray = "^0.15.0"
 pyproj = "^3.6.1"
 gdal = "3.6.2"
+python-ffmpeg = "^2.0.9"
 
 [tool.poetry.dev-dependencies]
 
