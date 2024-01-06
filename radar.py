@@ -122,19 +122,19 @@ def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
 
 
 def radolan_ry_example():
-    """Retrieve RADOLAN ry reflectivity data by DWD."""
-    log.info("Acquiring RADOLAN RY composite data")
+    """Retrieve RADOLAN rv reflectivity data by DWD."""
+    log.info("Acquiring RADOLAN RV composite data")
     now = datetime.now()
     #start = now - timedelta(minutes=30)
     start = now - timedelta(hours=4)
     end = now
     radolan = DwdRadarValues(
-        parameter=DwdRadarParameter.RY_REFLECTIVITY,
+        parameter=DwdRadarParameter.RV_REFLECTIVITY,
         start_date=start,
         end_date=end
     )
 
-    cache = True
+    cache = False
     file_prefix = "radar"
     file_quality = 50
     lossless = False
@@ -148,12 +148,15 @@ def radolan_ry_example():
 
         if not os.path.exists(file_path) or cache is False:
             # Decode data using wradlib.
-            log.info("Parsing RADOLAN RY composite data for %s", item.timestamp)
+            log.info("Parsing RADOLAN RV composite data for %s", item.timestamp)
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
                 ds = xr.open_dataset(item.data, engine="radolan")
 
+            #ds = ds.drop_isel(prediction_time = 0)
             product_type = list(ds.data_vars.keys())[0]
+
+            print(ds[product_type])
 
             # plotting the actual data
             plot(ds, product_type, timestamp)
@@ -164,7 +167,7 @@ def radolan_ry_example():
             img = plt.gcf().canvas.renderer.buffer_rgba()
             webp.imwrite(arr=img, file_path=file_path, quality=file_quality, lossless=lossless)
         else:            
-            log.info("Skipping RADOLAN RY composite data for %s", item.timestamp)
+            log.info("Skipping RADOLAN RV composite data for %s", item.timestamp)
 
         imgs_path.append(file_path)
         plt.close()
