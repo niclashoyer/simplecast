@@ -46,11 +46,14 @@ def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
 
     dot = []
 
-    #[bounds_lat, bounds_lon] = bounds_around(51.1638175, 10.4478313, 5.2, fig_w / fig_h) # Germany
-    [bounds_lat, bounds_lon] = bounds_around(54.1853998, 9.8220089, 7.0, fig_w / fig_h) # Schleswig-Holstein
+    [bounds_lat, bounds_lon] = bounds_around(51.1638175, 10.4478313, 5.2, fig_w / fig_h) # Germany
+    #[bounds_lat, bounds_lon] = bounds_around(54.1853998, 9.8220089, 7.0, fig_w / fig_h) # Schleswig-Holstein
 
     marker = None
     marker = [54.1853998, 9.8220089]
+
+    color_back = mplcolors.to_rgba("#6ee7b7", 0.0)
+    color_border = mplcolors.to_rgba("black", 0.25)
     
     # set up projections
     proj_radolan = wrl.georef.create_osr("dwd-radolan-sphere")
@@ -95,17 +98,16 @@ def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
     # set title and limits
     ax.xaxis.set_visible(False)
     ax.yaxis.set_visible(False)
-    color_back = mplcolors.to_rgba("white", 1.0)
     fig.set_facecolor(color_back)
     ax.patch.set_facecolor(color_back)
     ax.set_facecolor(color_back)
+    ax.set_facecolor(mplcolors.to_rgba("white", 0.4))
     plt.tight_layout(pad=0.5)
     ts_str = timestamp.strftime("%d.%m.%Y %H:%M")
     ax.set_title(ts_str)
-    border_color = mplcolors.to_rgba("gray", 1.0)
-    ax.tick_params(color=border_color, labelcolor=border_color)
+    ax.tick_params(color=color_border, labelcolor=color_border)
     for spine in ax.spines.values():
-        spine.set_edgecolor(border_color)
+        spine.set_edgecolor(color_border)
 
     # add marker
     if marker is not None:    
@@ -138,7 +140,11 @@ def radolan_ry_example():
     file_prefix = "radar"
     file_quality = 50
     lossless = False
+    write_anim = False
+    write_video_webm = True
+    write_video_mp4 = True
 
+    imgs = []
     imgs_path = []
 
     for item in radolan.query():
@@ -166,6 +172,7 @@ def radolan_ry_example():
         else:            
             log.info("Skipping RADOLAN RY composite data for %s", item.timestamp)
 
+        imgs.append(webp.load_image(file_path))
         imgs_path.append(file_path)
         plt.close()
     
@@ -175,23 +182,49 @@ def radolan_ry_example():
             log.info("Removing old webp image %s", f)
             os.remove(f)
 
-    # run ffmpeg
-    file_vid = file_prefix + ".webm"
-    log.info("Rendering new video file %s", file_vid)
-    ffmpeg = (
-        FFmpeg()
-        .option("y")
-        .option("pattern_type", "glob")
-        .option("framerate", "8")
-        .input(file_prefix + "_*.webp")
-        .output(
-            file_vid, {
-                "c:v": "libvpx-vp9",
-                "b:v": "250K"
-            },
+    # write animation
+    if write_anim:
+        file_anim = "{}.webp".format(file_prefix)
+        log.info("Writing webp animation to %s", file_anim)
+        webp.save_images(imgs, file_anim, fps=8.0, quality=file_quality, lossless=lossless)
+
+    # run ffmpeg for webm
+    if write_video_webm:
+        file_vid = file_prefix + ".webm"
+        log.info("Rendering new video file %s", file_vid)
+        ffmpeg = (
+            FFmpeg()
+            .option("y")
+            .option("pattern_type", "glob")
+            .option("framerate", "8")
+            .input(file_prefix + "_*.webp")
+            .output(
+                file_vid, {
+                    "c:v": "libvpx-vp9",
+                    "b:v": "250K"
+                },
+            )
         )
-    )
-    ffmpeg.execute()
+        ffmpeg.execute()
+
+    # run ffmpeg for mp4
+    if write_video_mp4:
+        file_vid = file_prefix + ".mp4"
+        log.info("Rendering new video file %s", file_vid)
+        ffmpeg = (
+            FFmpeg()
+            .option("y")
+            .option("pattern_type", "glob")
+            .option("framerate", "8")
+            .input(file_prefix + "_*.webp")
+            .output(
+                file_vid, {
+                    "c:v": "libx265",
+                    "b:v": "250K"
+                },
+            )
+        )
+        ffmpeg.execute()
 
 
 def main():

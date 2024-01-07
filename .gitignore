@@ -6,6 +6,7 @@
 /.venv/
 radar.webp
 radar.webm
+radar.mp4
 radar_*.webp
 
 # Ignore DevSpace cache and log folder
