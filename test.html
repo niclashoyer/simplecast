@@ -4,41 +4,64 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        fontFamily: {
+          display: ['Permanent Marker']
+        }
+      }
+    }
+  </script>
 </head>
 <body>
-  <div class="snap-y snap-mandatory text-white h-dvh w-full overflow-scroll">
-    <div class="snap-start snap-x snap-mandatory h-dvh w-full overflow-scroll flex">
-      <section class="block bg-green-300 h-dvh w-screen snap-start flex-none">
-        <span class="text-4xl p-4 block">A 1</span>
-      </section>
-      <section class="block bg-green-500 h-dvh w-screen snap-start flex-none">
-        <span class="text-4xl p-4 block">A 2</span>
-      </section>
-      <section class="block bg-green-700 h-dvh w-screen snap-start flex-none">
-        <span class="text-4xl p-4 block">A 3</span>
-      </section>
+  <div class="snap-y snap-mandatory text-white h-dvh w-full overflow-scroll font-display">
+    <div class="snap-start h-dvh w-full flex flex-col bg-emerald-300">
+      <div class="text-emerald-600 text-xl px-4 py-2">datWedder &gt; hüt</div>
+      <div class="snap-x snap-mandatory overflow-scroll flex grow">
+        <section class="relative block w-screen snap-start flex-none">
+          <span class="text-4xl px-4 py-2 block">Bannig veel Sünn <span class="whitespace-nowrap">bi 7°C</span></span>
+        </section>
+        <section class="block w-screen snap-start flex-none">
+          <span class="text-4xl px-4 py-2 block">A 2</span>
+        </section>
+        <section class="block w-screen snap-start flex-none">
+          <span class="text-4xl px-4 py-2 block">A 3</span>
+        </section>
+      </div>
+      <div class="text-lg">
+        <div class="float-left p-2 opacity-50">&lt; minner</div>
+        <div class="float-right p-2">mehr &gt;</div>
+      </div>
     </div>
-    <div class="snap-start snap-x snap-mandatory h-dvh w-full overflow-scroll flex">
-      <section class="block bg-violet-400 h-dvh w-screen snap-start flex-none">
-        <span class="text-4xl p-4 block">B 1</span>
-      </section>
-      <section class="block bg-violet-600 h-dvh w-screen snap-start flex-none">
-        <span class="text-4xl p-4 block">B 2</span>
-      </section>
-      <section class="block bg-violet-800 h-dvh w-screen snap-start flex-none">
-        <span class="text-4xl p-4 block">B 3</span>
-      </section>
+    <div class="snap-start h-dvh w-full flex flex-col">
+      <div class="bg-sky-300 text-sky-600 text-xl px-4 py-2">datWedder > morgen</div>
+      <div class="snap-x snap-mandatory overflow-scroll flex grow">
+        <section class="block bg-sky-300 w-screen snap-start flex-none">
+          <span class="text-4xl px-4 py-2 block">B 1</span>
+        </section>
+        <section class="block bg-sky-300 w-screen snap-start flex-none">
+          <span class="text-4xl px-4 py-2 block">B 2</span>
+        </section>
+        <section class="block bg-sky-300 w-screen snap-start flex-none">
+          <span class="text-4xl px-4 py-2 block">B 3</span>
+        </section>
+      </div>
     </div>
-    <div class="snap-start snap-x snap-mandatory h-dvh w-full overflow-scroll flex">
-      <section class="block bg-cyan-300 h-dvh w-screen snap-start flex-none">
-        <span class="text-4xl p-4 block">C 1</span>
-      </section>
-      <section class="block bg-cyan-500 h-dvh w-screen snap-start flex-none">
-        <span class="text-4xl p-4 block">C 2</span>
-      </section>
-      <section class="block bg-cyan-700 h-dvh w-screen snap-start flex-none">
-        <span class="text-4xl p-4 block">C 3</span>
-      </section>
+    <div class="snap-start h-dvh w-full flex flex-col">
+      <div class="bg-indigo-400 text-indigo-700 text-xl px-4 py-2">datWedder > nächstens</div>
+      <div class="snap-x snap-mandatory overflow-scroll flex grow">
+        <section class="block bg-indigo-400 w-screen snap-start flex-none">
+          <span class="text-4xl px-4 py-2 block">C 1</span>
+        </section>
+        <section class="block bg-indigo-400 w-screen snap-start flex-none">
+          <span class="text-4xl px-4 py-2 block">C 2</span>
+        </section>
+        <section class="block bg-indigo-400 w-screen snap-start flex-none">
+          <span class="text-4xl px-4 py-2 block">C 3</span>
+        </section>
+      </div>
     </div>
   </div>
 </body>
