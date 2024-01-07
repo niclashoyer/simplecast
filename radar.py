@@ -3,6 +3,7 @@ import os
 
 import matplotlib.pyplot as plt
 import matplotlib.colors as mplcolors
+from matplotlib import font_manager
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import xarray as xr
 from datetime import datetime, timedelta
@@ -53,7 +54,7 @@ def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
     marker = [54.1853998, 9.8220089]
 
     color_back = mplcolors.to_rgba("#6ee7b7", 0.0)
-    color_border = mplcolors.to_rgba("black", 0.25)
+    color_border = mplcolors.to_rgba("black", 0.0)
     
     # set up projections
     proj_radolan = wrl.georef.create_osr("dwd-radolan-sphere")
@@ -101,7 +102,7 @@ def plot(ds: xr.Dataset, product_type: str, timestamp: datetime):
     fig.set_facecolor(color_back)
     ax.patch.set_facecolor(color_back)
     ax.set_facecolor(color_back)
-    ax.set_facecolor(mplcolors.to_rgba("white", 0.4))
+    ax.set_facecolor(mplcolors.to_rgba("white", 0.0))
     plt.tight_layout(pad=0.5)
     ts_str = timestamp.strftime("%d.%m.%Y %H:%M")
     ax.set_title(ts_str)
@@ -136,14 +137,24 @@ def radolan_ry_example():
         end_date=end
     )
 
-    cache = True
+    # vars
+    cache = False
     file_prefix = "radar"
     file_quality = 50
     lossless = False
     write_anim = False
     write_video_webm = True
     write_video_mp4 = True
+    font_family = "Permanent Marker"
 
+    # set up custom fonts
+    font_files = font_manager.findSystemFonts(fontpaths="static/fonts/")
+    for font_file in font_files:
+        font_manager.fontManager.addfont(font_file)
+
+    plt.rcParams['font.family'] = font_family
+
+    # start parsing
     imgs = []
     imgs_path = []
 
